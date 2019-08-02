@@ -1,4 +1,5 @@
-#HackTheBox: Hidden in Colors 
+# HackTheBox: Hidden in Colors 
+
 | | |
 | ------------- |:-------------:|
 |  **Category** | Stego        |
@@ -8,14 +9,22 @@
 | **Solved by** | ZeroVash		|
 
 **Description**: 
+
 > We intercepted this weird image coming from a person of interest, can you figure it out because we sure can't.
 What we overheard is "the last two digits are of great importance".
+
 ***
+
 **Write up**:
-Very interesting stego task. One of the basic one, but made me sweat a little, since I first time saw it.
+
+Very interesting stego task. It made me sweat a little.
 
 We have a one png file with 6 squares on it.
+
+![ ](Task/colors.png  "Task")
+
 So first let check the file:
+
 ```bash
 	$ file colors.png
 ```
@@ -23,13 +32,16 @@ So first let check the file:
 > colors.png: PNG image data, 696 x 633, 8-bit/color RGBA, non-interlaced
 
 So it is a png file.... Continue with investigation...
+
 ```bash 
 	$ strings colors.png -n 6
 Nothing interesting.... 
 	$ strings colors.png -n 4
 Nothing interesting....
 ```
+
 Let see may be there are some hidden files inside the file.
+
 ![ ](writeup_png/binwalk.png  "Binwalk result")
 
 zlib... it is one of the file that always come out of any png file.... But to make sure I check it as well.... And Nothing....
@@ -52,17 +64,26 @@ Ha! He got me there.... Or did he, lets try to play with this string a little:
 After some time I see it is going nowhere. 
 
 Lets run stegsolve.jar, to check this image under filters and its color channels. 
+
 Nothing.... 
+
 May be there something hidden with steghide?!
+
 Let try steghide with password ***trolled***, ***Trolled***, etc
+
 NOTHING....
+
 Well, let think about what we have:
+
 We have an image with 6 different colors, and binary string to nowhere.
+
 6 different colors?!
+
 Channels are clear....
+
 Let see the color code of those colors:
 
-| | |
+| | | |
 |:--------:|:----------:|:----------:|
 | 9f2624 |  247c33  | d42b63 |
 | 5f5f30  | 0cef21  | 110731 |
@@ -71,8 +92,11 @@ What next?!  Wait in Description it had been said
 > "the last two digits are of great importance".
 
 Well, lets take last digits from each color from left to right, from up to bottom (if not working we will try other orders. It is just 720 possibilities XD )
+
 	``24 33 63 30 21 31``
+
 As a decimal numbers they don't tell me a lot, but what if they are hex numbers?! 
+
 ```\x24\x33\x63\x30\x21\x31```
 
 Let translate them into letters:
